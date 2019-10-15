@@ -111,16 +111,16 @@ import 'rxjs/add/operator/toPromise';
             </p-footer>
         </p-dialog>
         <p-dialog [(visible)]="showDockerURL" (onHide)="hideDockerDetails()" [responsive]="true"
-                  [dismissableMask]="true" [modal]="true" width="auto" positionTop="40" class="job-details">
+                  [dismissableMask]="true" [modal]="true" width="auto" positionTop="40" class="docker-details">
             <p-header class="dialog-header">
                 <span>Import New Job Type from Docker URL</span>
             </p-header>
             <div class="description-header">
                 <h3>Insert Docker URL</h3>
-                <h4>Example: hub.docker.com/orgName/imageName-jobVerison:packageVersion</h4>
             </div>
-            <div>
-                <input class="input-url" pInputText type="text" [(ngModel)]="URL">
+            <div class="from-url">
+                <input class="input-url" placeholder="hub.docker.com/orgName/imageName-jobVerison:packageVersion"
+                     pInputText type="text" [(ngModel)]="URL">
                 <button class="copy-manifest-btn ui-button-secondary" pButton type="button" [icon]="searchBtnIcon"
                         (click)='showFoundJob(URL)'>
                 </button>
@@ -181,9 +181,10 @@ import 'rxjs/add/operator/toPromise';
     }
     .seed-jobs .input-url {
         text-align: left;
-        width: 50%;
+        width: 90%;
         margin-right: 10px;
-        font-size: 1.5em;
+        font-size: 1.2em;
+
     }
     ::ng-deep .seed-jobs .search-input {
         width: 100%;
@@ -285,6 +286,9 @@ import 'rxjs/add/operator/toPromise';
         background: #efefef;
         border: 1px solid #bbb;
         font-size: 0.9em;
+    }
+    .from-url {
+        padding-bottom: 20px;
     }
     ::ng-deep .seed-jobs .results .ui-panel .ui-panel-content {
         padding: 0;
@@ -478,11 +482,11 @@ export class SeedImagesComponent implements OnInit {
         return this.http.get(`${this.environment.siloUrl}/images/manifest/${url}`)
             .toPromise()
             .then(response => {
+                this.hideDockerDetails();
                 return Promise.resolve(response);
             }, err => {
                 return Promise.reject(err);
             });
-
     }
 
     showFoundJob(url) {
